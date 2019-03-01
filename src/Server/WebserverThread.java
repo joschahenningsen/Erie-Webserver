@@ -12,7 +12,7 @@ public class WebserverThread extends Thread {
   private Socket client;
   private ArrayList<Route> routes;
   
-  public WebserverThread(TemplateProcessor tp, Socket client) {
+  public WebserverThread(Socket client) {
     this.tp = tp;
     this.client = client;
 

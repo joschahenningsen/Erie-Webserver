@@ -15,7 +15,6 @@ public class GetStartedPage extends Route {
 
     @Override
     public HttpResponse getResponse() throws IOException {
-        HashMap<String, String> vars=new HashMap<>();
         vars.put("%title", "Getting started");
         vars.put("%page0", "It Works!");
         vars.put("%page0link", "/");

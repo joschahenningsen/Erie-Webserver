@@ -1,5 +1,7 @@
 package Server;
 
+import Server.Routes.NotFoundError;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -31,7 +33,11 @@ public class FileRequest {
     }
 
     private void respond404(){
-        out.print(new HttpResponse(HttpStatus.NotFound, "<h1>404</h1><h2>File Not Found!</h2>"));
+        try {
+            out.print(new NotFoundError().getResponse());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void respond(){

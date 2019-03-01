@@ -8,16 +8,16 @@ import java.util.stream.IntStream;
 public class Webserver {
 
   public static void main(String[] args) throws IOException {
-    TemplateProcessor tp = new TemplateProcessor("html/index.html");
 
+    Config config=new Config();
     @SuppressWarnings("resource")
-    ServerSocket serverSocket = new ServerSocket(8000);
+    ServerSocket serverSocket = new ServerSocket(config.port);
     IntStream.iterate(0, i -> i + 1).forEach(i -> {
       Socket client;
       try {
         client = serverSocket.accept();
         System.out.println("*** Client connected!");
-        WebserverThread wst = new WebserverThread(tp, client);
+        WebserverThread wst = new WebserverThread(client);
         wst.start();
       } catch (IOException e) {
         e.printStackTrace();

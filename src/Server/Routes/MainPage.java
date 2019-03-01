@@ -14,7 +14,6 @@ public class MainPage extends Route{
     @Override
     public HttpResponse getResponse() throws IOException {
         TemplateProcessor templateProcessor=new TemplateProcessor("html/index.html");
-        HashMap<String, String> vars=new HashMap();
         vars.put("%title", "It Works!");
         vars.put("%page0", "It Works!");
         vars.put("%page0link", "/");

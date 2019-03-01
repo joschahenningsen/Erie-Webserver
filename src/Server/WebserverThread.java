@@ -2,11 +2,7 @@ package Server;
 
 import Server.Routes.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,23 +18,9 @@ public class WebserverThread extends Thread {
 
     routes=new ArrayList<>();
     routes.add(new MainPage());
-    routes.add(new MainCss());
   }
 
-
-  private HttpResponse handleFileRequest(String fileName) {
-    if (!fileName.contains("/content/"))
-      return new HttpResponse(HttpStatus.Forbidden);
-    String[] fileContents = Terminal.readFile(fileName);
-    if (fileContents == null)
-      return new HttpResponse(HttpStatus.NotFound);
-    if(fileContents.length != 2)
-      return new HttpResponse(HttpStatus.Forbidden);
-    String body = fileContents[1];
-    return new HttpResponse(HttpStatus.Ok, body);
-  }
-
-  private void communicate(BufferedReader in, PrintWriter out) throws IOException {
+  private void communicate(BufferedReader in, PrintWriter out, OutputStream outputStream) throws IOException {
     String requestLine = in.readLine();
     System.out.println(requestLine);
     if (requestLine == null)
@@ -69,8 +51,10 @@ public class WebserverThread extends Thread {
 
     AtomicReference<Route> response=new AtomicReference<>();
     routes.stream().filter(route -> route.getName().equals(request.getPath())).forEach(route-> response.set(route));
-    if (response.get()==null)
-      response.set(new NotFoundError());
+    if (response.get()==null) {
+      new FileRequest(request.getPath(), out, outputStream);
+      return;
+    }
     out.print(response.get().getResponse());
   }
   
@@ -80,7 +64,7 @@ public class WebserverThread extends Thread {
       BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
       PrintWriter out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
       try {
-        communicate(in, out);
+        communicate(in, out, client.getOutputStream());
       } catch (IOException exp) {
         exp.printStackTrace();
       } finally {

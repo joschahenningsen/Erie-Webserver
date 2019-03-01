@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 public class TemplateProcessor {
   private String contents;
@@ -24,5 +25,9 @@ public class TemplateProcessor {
   public String replace(java.util.Map<String, String> variableAssignments) {
     return variableAssignments.keySet().stream().reduce(contents,
         (acc, key) -> acc.replaceAll(key, variableAssignments.get(key)));
+  }
+
+  public String getBody() {
+    return replace(new HashMap<String, String>());
   }
 }

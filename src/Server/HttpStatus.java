@@ -20,7 +20,7 @@ public enum HttpStatus {
     return text;
   }
   
-  private HttpStatus(int code, String text) {
+  HttpStatus(int code, String text) {
     this.code = code;
     this.text = text;
   }

@@ -1,10 +1,9 @@
 package Server.Routes;
+
 import Server.HttpResponse;
 import Server.HttpStatus;
 import Server.TemplateProcessor;
-
 import java.io.IOException;
-import java.util.HashMap;
 
 public class MainPage extends Route{
     public MainPage(){
@@ -24,6 +23,7 @@ public class MainPage extends Route{
         vars.put("%page0active", "active");
         vars.put("%content", "<a href=\"get-started\" class=\"btn btn-lg btn-secondary\">get started!</a>");
 
-        return new HttpResponse(HttpStatus.Ok, templateProcessor.replace(vars));
+        HttpResponse response=new HttpResponse(HttpStatus.Ok, templateProcessor.replace(vars));
+        return response;
     }
 }

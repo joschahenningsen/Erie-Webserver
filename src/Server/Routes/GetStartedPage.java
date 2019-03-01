@@ -5,7 +5,6 @@ import Server.HttpStatus;
 import Server.TemplateProcessor;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class GetStartedPage extends Route {
 
@@ -29,6 +28,7 @@ public class GetStartedPage extends Route {
         content.append("Creating routes to your pages is as easy as it sonds: You'll have to create a new Class extending the Route class which implements a default Constructor that sets the attribute name to your pages url. Additionaly you are going to need to implement the function getResponse that returns a HttpResponse object. You can easily create your webpage by using a template file and replace contents with the TemplateProcessor. Finally you have to add the new class to the WebserverThreads constructor. Have fun and explore the Code!");
         content.append("</br></br></br><h2>Accessing Request Data</h2>");
         content.append("Accessing Request-data is not hard as well. Every Route implementing the Routes class has the attribute requestData which offers quite a few helpfull methods like hasCookie(String key) and getCookie(key). More is comming soon!");
+        content.append("<br>To set user side data, such as cookies you can use one of the methods implemented in HttpResponse. For example setCookie(String key, String value).");
         vars.put("%content", content.toString());
         System.out.println(vars);
         return new HttpResponse(HttpStatus.Ok, new TemplateProcessor("html/index.html").replace(vars));

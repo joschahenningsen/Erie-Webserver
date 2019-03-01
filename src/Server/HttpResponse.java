@@ -1,5 +1,7 @@
 package Server;
 
+import java.util.HashMap;
+
 public class HttpResponse {
   private HttpStatus status;
   
@@ -12,6 +14,8 @@ public class HttpResponse {
   public String getBody() {
     return body;
   }
+
+  private HashMap<String, String> cookies;
 
   public HttpResponse(HttpStatus status, String body) {
     this.status = status;
@@ -30,10 +34,20 @@ public class HttpResponse {
     responseBuilder.append(status.getCode());
     responseBuilder.append(" ");
     responseBuilder.append(status.getText());
+    if (cookies!=null) {
+      responseBuilder.append("\r\n");
+      cookies.forEach((o1, o2)->responseBuilder.append("Set-Cookie: "+o1+"="+o2));
+    }
     responseBuilder.append("\r\n\r\n");
     
     responseBuilder.append(body);
     
     return responseBuilder.toString();
   }
+
+    public void setCookie(String key, String value) {
+      if (cookies==null)
+        cookies=new HashMap<>();
+      cookies.put(key, value);
+    }
 }

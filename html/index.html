@@ -11,35 +11,34 @@
 </head>
 
 <body class="text-center">
+
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="masthead mb-auto">
         <div class="inner">
             <h3 class="masthead-brand">%title</h3>
             <nav class="nav nav-masthead justify-content-center">
-                <a class="nav-link active" href="#">Startseite</a>
-                <a class="nav-link" href="#">Andere Seite</a>
-                <a class="nav-link" href="#">Dritte Seite</a>
+                <a class="nav-link %page0active" href="%page0link">%page0</a>
+                <a class="nav-link %page1active" href="%page1link">%page1</a>
+                <a class="nav-link %page2active" target="_blank" href="%page2link">%page2</a>
             </nav>
         </div>
     </header>
 
     <main role="main" class="inner cover">
-        <h1 class="cover-heading">%value</h1>
-        <p class="lead">%results</p>
+        <h1 class="cover-heading">%title</h1>
+        <p class="lead">Welcome to the Java-Webserver</p>
         <p class="lead">
-            <a href="#" class="btn btn-lg btn-secondary">Knopf der nichts macht</a>
+            %content
         </p>
     </main>
 
     <footer class="mastfoot mt-auto">
         <div class="inner">
-            <p>(C)2019 - Joscha</p>
+            <a href="https://www.joschas.page">(C)2019 - Joscha</a>
         </div>
     </footer>
 </div>
 
-
 </body>
-
 
 </html>

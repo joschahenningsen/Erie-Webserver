@@ -18,7 +18,7 @@ public class FileRequest {
             exists=true;
         } catch (FileNotFoundException e) {
             exists=false;
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         this.out=out;
         this.outputStream=outputStream;
@@ -26,7 +26,7 @@ public class FileRequest {
         try {
             fileInputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -35,8 +35,10 @@ public class FileRequest {
     }
 
     private void respond(){
-        if (!exists)
+        if (!exists){
             respond404();
+            return;
+        }
         try {
             out.println("HTTP/2.0 "+HttpStatus.Ok.getCode()+" "+HttpStatus.Ok.getText());
             out.println("Content-Type: "+ Files.probeContentType(Paths.get(this.fileName)));

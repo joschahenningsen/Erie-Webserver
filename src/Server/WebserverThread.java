@@ -18,21 +18,22 @@ public class WebserverThread extends Thread {
 
     routes=new ArrayList<>();
     routes.add(new MainPage());
+    routes.add(new GetStartedPage());
   }
 
   private void communicate(BufferedReader in, PrintWriter out, OutputStream outputStream) throws IOException {
     String requestLine = in.readLine();
-    System.out.println(requestLine);
+    //System.out.println(requestLine);
     if (requestLine == null)
       return;
-
+    if (requestLine.contains("?"))
+      requestLine=requestLine.split("\\?")[0];
     AtomicReference<String> otherLines= new AtomicReference<>("");
-    in.lines().takeWhile(l->!l.equals("")).forEach(l->otherLines.set(otherLines.get()+"\n"+l));
-    System.out.println(otherLines.get());
+    in.lines().takeWhile(l->!l.equals("")).forEach(l->otherLines.getAndSet(otherLines.get()+"\n"+l));
     System.out.println("=> Request header received");
     HttpRequest request;
     try {
-      request = new HttpRequest(requestLine);
+      request = new HttpRequest(requestLine, otherLines.get());
     } catch (InvalidRequestException ex) {
       System.out.println("=> Bad request!");
       out.print(new HttpResponse(HttpStatus.BadRequest));
@@ -51,9 +52,12 @@ public class WebserverThread extends Thread {
 
     AtomicReference<Route> response=new AtomicReference<>();
     routes.stream().filter(route -> route.getName().equals(request.getPath())).forEach(route-> response.set(route));
+
     if (response.get()==null) {
       new FileRequest(request.getPath(), out, outputStream);
       return;
+    }else {
+      response.get().setRequestData(request);
     }
     out.print(response.get().getResponse());
   }

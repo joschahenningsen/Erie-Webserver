@@ -1,5 +1,6 @@
 package Server;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -15,15 +16,19 @@ public class HttpRequest {
   public String getPath() {
     return path;
   }
-  
-  private Map<String, String> parameters;
-  
-  public Map<String, String> getParameters() {
-    return parameters;
+
+  private HashMap<String, String> cookies;
+
+  public boolean hasCookie(String key){
+    return cookies.containsKey(key);
   }
+
+  public String getCookie(String key){
+    return cookies.get(key);
+  }
+
   
-  
-  public HttpRequest(String requestLine) {
+  public HttpRequest(String requestLine, String others) {
     String[] requestLineParts = requestLine.split(" ");
     if(requestLineParts.length < 2)
       throw new InvalidRequestException();
@@ -38,8 +43,23 @@ public class HttpRequest {
       default:
         throw new InvalidRequestException();
     }
-    
-    this.parameters = new TreeMap<>();
+
+
+    System.out.println(others);
+    String additionalParams[] = others.split("\n");
+    cookies=new HashMap<>();
+    for (int i = 0; i < additionalParams.length; i++) {//resolve cookies
+      if (additionalParams[i].startsWith("Cookie: ")){
+        if (additionalParams[i].contains(";")){
+          String[]cookies=additionalParams[i].split(": ")[1].split("; ");
+          for (String cookie : cookies) {
+            this.cookies.put(cookie.split("=")[0],cookie.split("=")[1]);
+          }
+        }else{
+          this.cookies.put(additionalParams[i].split(": ")[1].split("=")[0], additionalParams[i].split(": ")[1].split("=")[1]);
+        }
+      }
+    }
     
     String resource = requestLineParts[1];
     String[] pathParams = resource.split("\\?");
@@ -54,7 +74,6 @@ public class HttpRequest {
       String[] paramValue = params[i].split("=");
       if(paramValue.length != 2)
         throw new InvalidRequestException();
-      parameters.put(paramValue[0], paramValue[1]);
     }
   }
 }

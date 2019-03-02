@@ -5,6 +5,7 @@ import Server.Routes.NotFoundError;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.rmi.server.ExportException;
 
 public class FileRequest {
     private String fileName;
@@ -27,7 +28,7 @@ public class FileRequest {
         respond();
         try {
             fileInputStream.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             //e.printStackTrace();
         }
     }

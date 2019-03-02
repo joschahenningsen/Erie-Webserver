@@ -23,7 +23,7 @@ public class TemplateProcessor {
   }
 
   public String replace(java.util.Map<String, String> variableAssignments) {
-    //sorts variables by length in order to prevent wrong replacements
+    //sorts variables by length to prevent unwanted replacements
     Map<String, String> sortedAssignments = new TreeMap<>(
             (s1, s2) -> {
               if (s1.length() > s2.length()) {
@@ -34,19 +34,12 @@ public class TemplateProcessor {
                 return s1.compareTo(s2);
               }
             });
-    sortedAssignments.forEach((s, s2) -> System.out.println(s+":"+s2));
     sortedAssignments.putAll(variableAssignments);
     sortedAssignments.
             keySet().
             stream().
             sorted(((TreeMap<String, String>) sortedAssignments).comparator()).
-            forEach(s -> {
-              contents = contents.replaceAll(s, sortedAssignments.get(s));
-            });
+            forEach(s -> contents = contents.replaceAll(s, sortedAssignments.get(s)));
     return contents;
-  }
-
-  public String getBody() {
-    return replace(new HashMap<String, String>());
   }
 }

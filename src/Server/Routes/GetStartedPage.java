@@ -30,7 +30,6 @@ public class GetStartedPage extends Route {
         content.append("Accessing Request-data is not hard as well. Every Route implementing the Routes class has the attribute requestData which offers quite a few helpfull methods like hasCookie(String key) and getCookie(key). More is comming soon!");
         content.append("<br>To set user side data, such as cookies you can use one of the methods implemented in HttpResponse. For example setCookie(String key, String value).");
         vars.put("%content", content.toString());
-        System.out.println(vars);
         return new HttpResponse(HttpStatus.Ok, new TemplateProcessor("html/index.html").replace(vars));
     }
 }

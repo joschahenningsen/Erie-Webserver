@@ -1,8 +1,8 @@
 package Server;
 
+import Server.Exceptions.InvalidRequestException;
+
 import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class HttpRequest {
   private HttpMethod method;

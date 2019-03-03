@@ -1,11 +1,11 @@
 package Server;
 
-import Server.Routes.NotFoundError;
+import Server.Routes.Error403;
+import Server.Routes.Error404;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.rmi.server.ExportException;
 
 public class FileRequest {
     private String fileName;
@@ -13,18 +13,15 @@ public class FileRequest {
     private boolean exists;
     private PrintWriter out;
     private OutputStream outputStream;
+    private boolean forbidden;
 
     public FileRequest(String fileName, PrintWriter out, OutputStream outputStream){
         this.fileName=fileName.substring(1);
-        try {
-            fileInputStream=new FileInputStream(this.fileName);
-            exists=true;
-        } catch (FileNotFoundException e) {
-            exists=false;
-            //e.printStackTrace();
-        }
         this.out=out;
         this.outputStream=outputStream;
+        exists();
+        isForbidden();
+
         respond();
         try {
             fileInputStream.close();
@@ -33,16 +30,33 @@ public class FileRequest {
         }
     }
 
-    private void respond404(){
+    private void exists() {
         try {
-            out.print(new NotFoundError().getResponse());
-        } catch (IOException e) {
-            e.printStackTrace();
+            fileInputStream=new FileInputStream(this.fileName);
+            exists=true;
+        } catch (FileNotFoundException e) {
+            exists=false;
+        }
+    }
+
+    private void isForbidden() {
+        try {
+            String tempName = ".forbidden";
+            if (this.fileName.indexOf("/")!=-1)
+                tempName = fileName.substring(0, fileName.lastIndexOf("/"))+"/"+tempName;
+            System.out.println(tempName);
+            fileInputStream=new FileInputStream(tempName);
+            forbidden=true;
+        } catch (FileNotFoundException e) {
+            forbidden=false;
         }
     }
 
     private void respond(){
-        if (!exists){
+        if (forbidden){
+            respond403();
+            return;
+        }else if (!exists){
             respond404();
             return;
         }
@@ -56,6 +70,23 @@ public class FileRequest {
             out.print("\r\n\r\n");
         } catch (IOException e) {
             respond404();
+        }
+    }
+
+
+    private void respond403() {
+        try {
+            out.print(new Error403().getResponse());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void respond404(){
+        try {
+            out.print(new Error404().getResponse());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

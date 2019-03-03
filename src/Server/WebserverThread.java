@@ -1,5 +1,6 @@
 package Server;
 
+import Server.Exceptions.InvalidRequestException;
 import Server.Routes.*;
 
 import java.io.*;

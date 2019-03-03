@@ -6,6 +6,7 @@ public class Config {
     int port;
     public HashMap<String, String> defaultReplacements=new HashMap<>();
     String logfile;
+    String[] disallow;
 
     public Config(){
         port=80;

@@ -1,10 +1,13 @@
 package Server;
 
+import Server.Exceptions.InvalidNameException;
+
 import java.util.HashMap;
 
 public class HttpResponse {
+  private String[] illegalCookieChars=new String[]{"(", ")", "<", ">", "@", ",", ";",":", "\\", "\"","/", "[", "]", "?", "=", "{", "}"};
   private HttpStatus status;
-  
+
   public HttpStatus getStatus() {
     return status;
   }
@@ -45,9 +48,19 @@ public class HttpResponse {
     return responseBuilder.toString();
   }
 
-    public void setCookie(String key, String value) {
+    public void setCookie(String key, String value, String extras) {
+      for (int i = illegalCookieChars.length - 1; i >= 0; i--) {
+        if (key.contains(illegalCookieChars[i])||value.contains(illegalCookieChars[i]))
+          throw new InvalidNameException();
+      }
       if (cookies==null)
         cookies=new HashMap<>();
+      if (!extras.equals(""))
+        value+="; "+extras;
       cookies.put(key, value);
+    }
+
+    public void setCookies(String key, String value){
+      setCookie(key, value, "");
     }
 }

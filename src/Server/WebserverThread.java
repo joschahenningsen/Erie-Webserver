@@ -52,7 +52,7 @@ public class WebserverThread extends Thread {
     }
 
     AtomicReference<Route> response=new AtomicReference<>();
-    routes.stream().filter(route -> route.getName().equals(request.getPath())).forEach(route-> response.set(route));
+    routes.stream().filter(route->route.getUrl()!=null).filter(route -> route.getUrl().equals(request.getPath())).forEach(route-> response.set(route));
 
     if (response.get()==null) {
       new FileRequest(request.getPath(), out, outputStream);

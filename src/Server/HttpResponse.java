@@ -2,11 +2,13 @@ package Server;
 
 import Server.Exceptions.InvalidNameException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HttpResponse {
   private String[] illegalCookieChars=new String[]{"(", ")", "<", ">", "@", ",", ";",":", "\\", "\"","/", "[", "]", "?", "=", "{", "}"};
   private HttpStatus status;
+  private ArrayList<String> headers=new ArrayList<>();
 
   public HttpStatus getStatus() {
     return status;
@@ -37,6 +39,7 @@ public class HttpResponse {
     responseBuilder.append(status.getCode());
     responseBuilder.append(" ");
     responseBuilder.append(status.getText());
+    headers.forEach(s -> responseBuilder.append("\r\n"+s));
     if (cookies!=null) {
       responseBuilder.append("\r\n");
       cookies.forEach((o1, o2)->responseBuilder.append("Set-Cookie: "+o1+"="+o2));
@@ -58,6 +61,10 @@ public class HttpResponse {
       if (!extras.equals(""))
         value+="; "+extras;
       cookies.put(key, value);
+    }
+
+    public void addHeader(String header){
+      headers.add(header);
     }
 
     public void setCookies(String key, String value){

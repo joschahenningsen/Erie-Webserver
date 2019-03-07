@@ -8,23 +8,41 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * thread being created for each user.
+ * @author Joscha Henningsen
+ */
 public class WebserverThread extends Thread {
   private TemplateProcessor tp;
   private Socket client;
   private ArrayList<Route> routes;
-  
+
+  /**
+   * Called by the Main method each time a user connects.
+   * Make sure to include every Route in this method you want to be publicly available
+   * @param client
+   */
   public WebserverThread(Socket client) {
-    this.tp = tp;
     this.client = client;
 
     routes=new ArrayList<>();
+
+    //important:
     routes.add(new MainPage());
     routes.add(new GetStartedPage());
   }
 
+  /**
+   * composes the http response and sends it back to the user.
+   * This method basically is the heart of the server.- Make sure to be careful editing it
+   * @param in
+   * @param out
+   * @param outputStream
+   * @throws IOException
+   */
   private void communicate(BufferedReader in, PrintWriter out, OutputStream outputStream) throws IOException {
     String requestLine = in.readLine();
-    //System.out.println(requestLine);
+
     if (requestLine == null)
       return;
     if (requestLine.contains("?"))
@@ -52,6 +70,7 @@ public class WebserverThread extends Thread {
     }
 
     AtomicReference<Route> response=new AtomicReference<>();
+    //finds the correct route for the request
     routes.stream().filter(route->route.getUrl()!=null).filter(route -> route.getUrl().equals(request.getPath())).forEach(route-> response.set(route));
 
     if (response.get()==null) {
@@ -62,7 +81,10 @@ public class WebserverThread extends Thread {
     }
     out.print(response.get().getResponse());
   }
-  
+
+  /**
+   * Starts thread that interacts with the user
+   */
   @Override
   public void run() {
     try {

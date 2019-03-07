@@ -1,5 +1,9 @@
 package Server;
 
+/**
+ * Enum for the http status codes send by the server
+ * @author Joscha Henningsen
+ */
 public enum HttpStatus {
   Ok(200, "Ok"),
   BadRequest(400, "Bad Request"),

@@ -1,5 +1,9 @@
 package Server.Exceptions;
 
+/**
+ * Exception being thrown if a request is invalid
+ * @author Joscha Henningsen
+ */
 public class InvalidRequestException extends RuntimeException {
   private static final long serialVersionUID = 1L;
 

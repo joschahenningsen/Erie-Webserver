@@ -7,9 +7,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
+/**
+ * reads a template file and replaces contents you want to change in your route
+ * @author Joscha Henningsen
+ */
 public class TemplateProcessor {
   private String contents;
 
+  /**
+   * Setup template processor by File name
+   * @param fileName
+   * @throws IOException
+   */
   public TemplateProcessor(String fileName) throws IOException {
     InputStream is = new FileInputStream(fileName);
     BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -22,6 +31,11 @@ public class TemplateProcessor {
     }
   }
 
+  /**
+   * Replaces all values from the variableAssignments in the template
+   * @param variableAssignments
+   * @return String body
+   */
   public String replace(java.util.Map<String, String> variableAssignments) {
     //sorts variables by length to prevent unwanted replacements
     Map<String, String> sortedAssignments = new TreeMap<>(

@@ -1,11 +1,22 @@
 package Server.Routes;
 
+/**
+ * Sample Route, inspire yourself
+ * @author Joscha Henningsen
+ */
 public class MainPage extends Route{
 
+    /**
+     * This is important! If you don't call setUrl in the constructor of your Routes, the page can't be accessed directly.
+     */
     public MainPage(){
         setUrl("/");
     }
 
+
+    /**
+     * sets everything your page does
+     */
     @Override
     public void setupPage() {
         setTemplateFile("html/index.html");

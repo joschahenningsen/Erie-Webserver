@@ -5,8 +5,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.stream.IntStream;
 
+/**
+ * Main class for the server.
+ * Starts a new Thread for each request.
+ * @author Joscha Henningsen
+ */
 public class Webserver {
 
+  /**
+   * Main method to start Server with
+   * @param args (not used)
+   * @throws IOException
+   */
   public static void main(String[] args) throws IOException {
 
     Config config=new Config();

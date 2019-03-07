@@ -4,30 +4,57 @@ import Server.Exceptions.InvalidRequestException;
 
 import java.util.HashMap;
 
+/**
+ * Represents the request send to the server
+ * @author Joscha Henningsen
+ */
 public class HttpRequest {
   private HttpMethod method;
-  
+
+  /**
+   * gets the Method for the request
+   * @return HttpMethod.Post/Get
+   */
   public HttpMethod getMethod() {
     return method;
   }
   
   private String path;
-  
+
+  /**
+   * returns the path the user tries to access
+   * @return path
+   */
   public String getPath() {
     return path;
   }
 
   private HashMap<String, String> cookies;
 
+  /**
+   * checks if cookie exists by key
+   * @param key
+   * @return boolean hasCookie
+   */
   public boolean hasCookie(String key){
     return cookies.containsKey(key);
   }
 
+  /**
+   * returns a cookie by key
+   * @param key
+   * @return cookie value
+   */
   public String getCookie(String key){
     return cookies.get(key);
   }
 
-  
+
+  /**
+   * Sets up request by the Header send from browser
+   * @param requestLine
+   * @param others
+   */
   public HttpRequest(String requestLine, String others) {
     String[] requestLineParts = requestLine.split(" ");
     if(requestLineParts.length < 2)

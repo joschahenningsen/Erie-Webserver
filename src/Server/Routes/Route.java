@@ -18,6 +18,7 @@ public abstract class Route {
     private String body;
     private String url;
     private boolean acceptsSubPages=false;
+    private String contentType;
 
 
     /**
@@ -94,7 +95,15 @@ public abstract class Route {
     public abstract void setupPage();
 
     /**
-     * Builds your response based on your setupPage implementation
+     * Sets the content type of the page. Defaults to "text/html" if not called.
+     * @param contentType
+     */
+    public void setContentType(String contentType){
+        this.contentType=contentType;
+    }
+
+    /**
+     * Builds your response based on your setupPage implementation.
      * @return response
      * @throws IOException
      */
@@ -107,6 +116,10 @@ public abstract class Route {
         if (body!=null)
             return new HttpResponse(status, body);
         TemplateProcessor templateProcessor=new TemplateProcessor(templateFile);
-        return new HttpResponse(status, templateProcessor.replace(vars));
+        HttpResponse response = new HttpResponse(status, templateProcessor.replace(vars));
+        if (contentType==null||contentType=="")
+            contentType="text/html";
+        response.addHeader("Content-Type: "+contentType);
+        return response;
     }
 }

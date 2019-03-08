@@ -22,7 +22,7 @@ public class HttpResponse {
   }
   
   private String body;
-  
+
   public String getBody() {
     return body;
   }

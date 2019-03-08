@@ -79,6 +79,7 @@ public class WebserverThread extends Thread {
       }
     }
 
+    //assumes request is send to a file, if no route exists
     if (response==null) {
       new FileRequest(request.getPath(), out, outputStream);
       return;

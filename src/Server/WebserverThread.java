@@ -69,17 +69,23 @@ public class WebserverThread extends Thread {
       //System.out.println(in.readLine());
     }
 
-    AtomicReference<Route> response=new AtomicReference<>();
+    Route response=null;
     //finds the correct route for the request
-    routes.stream().filter(route->route.getUrl()!=null).filter(route -> route.getUrl().equals(request.getPath())).forEach(route-> response.set(route));
+    for (Route route:routes) {
+      if (route!=null){
+        if ((route.acceptsSubPages()&&request.getPath().startsWith(route.getUrl()+"/"))||route.getUrl().equals(request.getPath())){
+          response=route;
+        }
+      }
+    }
 
-    if (response.get()==null) {
+    if (response==null) {
       new FileRequest(request.getPath(), out, outputStream);
       return;
     }else {
-      response.get().setRequestData(request);
+      response.setRequestData(request);
     }
-    out.print(response.get().getResponse());
+    out.print(response.getResponse());
   }
 
   /**

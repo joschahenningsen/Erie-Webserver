@@ -4,6 +4,7 @@ public class GetStartedPage extends Route {
 
     public GetStartedPage(){
         setUrl("/get-started");
+        acceptSubpages(true);
     }
 
     @Override

@@ -17,6 +17,24 @@ public abstract class Route {
     private String templateFile;
     private String body;
     private String url;
+    private boolean acceptsSubPages=false;
+
+
+    /**
+     * Sets the route to be a page that gets request for sub urls
+     * @param acceptsSubPages true->enable false->disable
+     */
+    public void acceptSubpages(boolean acceptsSubPages){
+        this.acceptsSubPages=acceptsSubPages;
+    }
+
+    /**
+     * returns whether page is a root page or not
+     * @return acceptsSubPages
+     */
+    public boolean acceptsSubPages() {
+        return acceptsSubPages;
+    }
 
     /**
      * Sets the (html) body for your response.

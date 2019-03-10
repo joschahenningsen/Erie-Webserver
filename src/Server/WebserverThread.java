@@ -47,6 +47,7 @@ public class WebserverThread extends Thread {
       return;
     if (requestLine.contains("?"))
       requestLine=requestLine.split("\\?")[0];
+    System.out.println(requestLine);
     AtomicReference<String> otherLines= new AtomicReference<>("");
     in.lines().takeWhile(l->!l.equals("")).forEach(l->otherLines.getAndSet(otherLines.get()+"\n"+l));
     System.out.println("=> Request header received");
@@ -64,9 +65,7 @@ public class WebserverThread extends Thread {
       out.print(new HttpResponse(HttpStatus.MethodNotAllowed));
       return;
     }else if (request.getMethod()==HttpMethod.POST){
-      //todo: handle post request
-      //out.println("got header");
-      //System.out.println(in.readLine());
+      //todo: handle post request 
     }
 
     Route response=null;

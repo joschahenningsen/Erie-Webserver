@@ -1,15 +1,21 @@
-package Server;
+package Server.Database;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class Database {
+/**
+ * A simple to use in memory Database
+ * @author Joscha Henningsen
+ */
+public class Database implements Iterator<String[]>{
     private String[] headers;
     private String name;
-    private ArrayList<String> data;
+    public ArrayList<String> data;
     private int cacheTime;
     private long lastUpdate;
     private String fileExtention=".jwsdb";
+    private int index;
 
     /**
      * Database Constructor.
@@ -21,7 +27,7 @@ public class Database {
     public Database(String name, String headers, int cacheTime){
         this.name=name;
         this.headers=headers.split(";");
-        this.cacheTime=cacheTime;
+        this.cacheTime=cacheTime*1000;
         data=new ArrayList<>();
         File f=new File(name+fileExtention);
         if(f.exists()){
@@ -31,31 +37,11 @@ public class Database {
         }
     }
 
+
     private void saveDatabase() {
-        File f = new File(name+fileExtention);
-        FileOutputStream fileOutputStream=null;
-        try {
-            fileOutputStream=new FileOutputStream(f);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        PrintWriter printWriter = new PrintWriter(fileOutputStream);
-        for (int i = 0; i < headers.length; i++) {
-            if (i<headers.length-1) {
-                printWriter.print(headers[i] + ";");
-            }else{
-                printWriter.print(headers[i]+"\n");
-            }
-        }
-        data.forEach(date -> printWriter.println(date));
-        printWriter.close();
-        printWriter.flush();
-        try {
-            fileOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        lastUpdate = System.currentTimeMillis() / 1000;
+        Thread saveThread=new Thread(new SaveThread(data, name+fileExtention, headers));
+        saveThread.start();
+        lastUpdate = System.currentTimeMillis();
     }
 
     private void loadDatabase() {
@@ -75,13 +61,14 @@ public class Database {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        bufferedReader.lines().forEach(l -> data.add(l));
-        data.forEach(d->System.out.println(d));
+        data = new ArrayList<>();
+        synchronized (data) {
+            bufferedReader.lines().forEach(l -> data.add(l));
+        }
     }
 
     public void put(String[] date){
         synchronized (data){
-            loadDatabase();
             String dateTemp="";
             for (int i = 0; i < date.length; i++) {
                 dateTemp += date[i];
@@ -89,8 +76,29 @@ public class Database {
                     dateTemp += ";";
             }
             data.add(dateTemp);
-            saveDatabase();
+            if ((System.currentTimeMillis())-(lastUpdate+cacheTime)>=0)
+                saveDatabase();
         }
     }
 
+
+    public ArrayList<String[]> get(String query){
+        String[] queryKeywords = query.split(" ");
+
+        return null;
+    }
+
+    public String[] getHeaders() {
+        return headers;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return index<data.size();
+    }
+
+    @Override
+    public String[] next() {
+        return data.get(index++).split(";");
+    }
 }

@@ -2,7 +2,6 @@ package Server.Database;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -12,7 +11,7 @@ import java.util.Iterator;
 public class Database implements Iterator<String[]>{
     private String[] headers;
     private String name;
-    public ArrayList<String> data;
+    private ArrayList<String> data;
     private int cacheTime;
     private long lastUpdate;
     private String fileExtention=".jwsdb";
@@ -47,9 +46,8 @@ public class Database implements Iterator<String[]>{
 
     private void loadDatabase() {
         File f = new File(name+fileExtention);
-        FileInputStream fileInputStream = null;
-        FileReader fileReader = null;
-        BufferedReader bufferedReader = null;
+        FileReader fileReader;
+        BufferedReader bufferedReader;
         try {
             fileReader = new FileReader(f);
             bufferedReader = new BufferedReader(fileReader);
@@ -83,6 +81,12 @@ public class Database implements Iterator<String[]>{
     }
 
 
+    /**
+     * Querys the database.
+     * At the moment only Select statement usable, example:
+     * @param query input query like "Select user, password Where (id='5') And (time>=42)"
+     * @return ArrayList with results
+     */
     public ArrayList<String[]> query(String query){
         String[] queryKeywords = query.split(" ");
         if (queryKeywords[0].toUpperCase().equals("SELECT")){

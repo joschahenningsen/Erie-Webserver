@@ -1,5 +1,9 @@
 package Server.Database;
 
+/**
+ * Component in DB Queries
+ * @author Joscha Henningsen
+ */
 public interface QueryComponent {
-    public void accept(Visitor v);
+    void accept(Visitor v);
 }

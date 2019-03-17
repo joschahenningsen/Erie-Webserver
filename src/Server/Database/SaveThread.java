@@ -3,12 +3,17 @@ package Server.Database;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Separate Thread that saves the database after changes, in order to prevent
+ * long waiting times after changing db fields
+ * @author Joscha Henningsen
+ */
 public class SaveThread implements Runnable{
     private final String[] headers;
-    private ArrayList<String> data;
+    private final ArrayList<String> data;
     private String fileName;
 
-    public SaveThread(ArrayList<String> data, String fileName, String[] headers){
+    SaveThread(ArrayList<String> data, String fileName, String[] headers){
         this.data = data;
         this.fileName = fileName;
         this.headers=headers;
@@ -33,7 +38,7 @@ public class SaveThread implements Runnable{
                     printWriter.print(headers[i] + "\n");
                 }
             }
-            data.forEach(date -> printWriter.println(date));
+            data.forEach(printWriter::println);
             printWriter.flush();
             printWriter.close();
             try {

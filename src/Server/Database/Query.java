@@ -1,3 +1,7 @@
 package Server.Database;
 
-public abstract class Query implements QueryComponent{}
+/**
+ * DB query abstract class. Queries such as SelectQuery extend this class
+ * @author Joscha Henningsen
+ */
+abstract class Query implements QueryComponent{}

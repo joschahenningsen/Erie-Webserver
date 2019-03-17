@@ -5,31 +5,32 @@ import java.io.*;
 /**
  * Based on https://github.com/unnikkedga.
  * MIT licenced, big thanks!
+ * @author Joscha Henningsen
  */
 public class Lexer {
     private StreamTokenizer input;
 
     private int symbol = NONE;
-    public static final int EOL = -3;
-    public static final int EOF = -2;
-    public static final int INVALID = -1;
+    static final int EOL = -3;
+    static final int EOF = -2;
+    private static final int INVALID = -1;
 
-    public static final int NONE = 0;
+    private static final int NONE = 0;
 
-    public static final int OR = 1;
-    public static final int AND = 2;
-    public static final int NOT = 3;
+    private static final int OR = 1;
+    private static final int AND = 2;
+    private static final int NOT = 3;
 
-    public static final int TRUE = 4;
-    public static final int FALSE = 5;
+    private static final int TRUE = 4;
+    private static final int FALSE = 5;
 
-    public static final int LEFT = 6;
-    public static final int RIGHT = 7;
+    private static final int LEFT = 6;
+    private static final int RIGHT = 7;
 
-    public static final String TRUE_LITERAL = "true";
-    public static final String FALSE_LITERAL = "false";
+    private static final String TRUE_LITERAL = "true";
+    private static final String FALSE_LITERAL = "false";
 
-    public Lexer(InputStream in) {
+    Lexer(InputStream in) {
         Reader r = new BufferedReader(new InputStreamReader(in));
         input = new StreamTokenizer(r);
 
@@ -53,7 +54,7 @@ public class Lexer {
         input.ordinaryChar('=');
     }
 
-    public int nextSymbol() {
+    int nextSymbol() {
         try {
             switch (input.nextToken()) {
                 case StreamTokenizer.TT_EOL:

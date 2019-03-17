@@ -1,9 +1,13 @@
 package Server.Database;
 
+/**
+ * Exception throws if query is malformed
+ * @author Joscha Henningsen
+ */
 public class QueryException extends RuntimeException {
-    String message;
+    private String message;
 
-    public QueryException(String message) {
+    QueryException(String message) {
         this.message = message;
     }
 

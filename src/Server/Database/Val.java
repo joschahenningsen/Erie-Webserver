@@ -1,13 +1,17 @@
 package Server.Database;
 
+/**
+ * Value in query's condition
+ * @author Joscha Henningsen
+ */
 public class Val implements QueryComponent{
-    public String content;
+    private String content;
 
-    public Val(String content){
+    Val(String content){
         this.content = content;
     }
 
-    public String getContent(){
+    String getContent(){
         return content;
     }
 

@@ -2,6 +2,10 @@ package Server.Database;
 
 import java.util.ArrayList;
 
+/**
+ * Visitor that handles query evaluations
+ * @author Joscha Henningsen
+ */
 public class EvaluationVisitor extends Visitor {
 
     private Database database;
@@ -12,7 +16,7 @@ public class EvaluationVisitor extends Visitor {
     private String currentEvaluation;
     private boolean currentEvaluationRes;
 
-    public EvaluationVisitor(Database database, Query query){
+    EvaluationVisitor(Database database, Query query){
         this.database = database;
         this.query = query;
         results = new ArrayList<>();
@@ -103,7 +107,7 @@ public class EvaluationVisitor extends Visitor {
         }
     }
 
-    public ArrayList<String[]> evaluate(){
+    ArrayList<String[]> evaluate(){
         query.accept(this);
         return results;
     }

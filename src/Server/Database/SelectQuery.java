@@ -1,19 +1,23 @@
 package Server.Database;
 
+/**
+ * A Select query
+ * @author Joscha Henningsen
+ */
 public class SelectQuery extends Query {
-    Var[] vars;
-    Cond cond;
+    private Var[] vars;
+    private Cond cond;
 
-    public SelectQuery(Var[]vars, Cond cond){
+    SelectQuery(Var[] vars, Cond cond){
         this.vars = vars;
         this.cond = cond;
     }
 
-    public Var[] getVars() {
+    Var[] getVars() {
         return vars;
     }
 
-    public Cond getCond() {
+    Cond getCond() {
         return cond;
     }
 

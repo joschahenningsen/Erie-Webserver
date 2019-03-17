@@ -1,16 +1,20 @@
 package Server.Database;
 
+/**
+ * Variable pointer in queries
+ * @author Joscha Henningsen
+ */
 public class Var implements QueryComponent{
 
     private String name;
 
-    public Var(String name){
-        if(name.indexOf(";")!=-1)
+    Var(String name){
+        if(name.contains(";"))
             throw new QueryException("Illegal vaiable name");
         this.name=name;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 

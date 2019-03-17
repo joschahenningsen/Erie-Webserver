@@ -1,23 +1,25 @@
 package Server.Database;
 
 import java.io.ByteArrayInputStream;
-import java.util.Arrays;
 
+/**
+ * Condition for db queries
+ * @author Joscha Henningsen
+ */
 public class Cond implements QueryComponent{
     Cond lCond;
     Cond rCond;
-    CondOp condOp;
+    private CondOp condOp;
 
     Expr lExpr;
     Expr rExpr;
-    CompOp compOp;
+    private CompOp compOp;
 
-    String[] tokens;
-    private String tokenStr;
+    private String[] tokens;
 
     private boolean isLeaf;
 
-    public Cond(String conditions, int start, int end){
+    Cond(String conditions, int start, int end){
         Lexer l = new Lexer(new ByteArrayInputStream(conditions.getBytes()));
         int s;
         String tokenStr="";
@@ -30,7 +32,6 @@ public class Cond implements QueryComponent{
                 }
             }
         this.tokens = tokenStr.substring(1).split(";");
-        this.tokenStr = tokenStr;
         if (end == 0)
             end = tokens.length;
 
@@ -44,9 +45,8 @@ public class Cond implements QueryComponent{
                         }else {
                             rCond=new Cond(conditions, i+1, len-1);
                         }
-                    }else {
-                        //
                     }
+
                     i = len;
                     continue;
                 case "')'":
@@ -59,18 +59,25 @@ public class Cond implements QueryComponent{
                     this.condOp = CondOp.Or;
                     continue;
                 default:
-                    if (tokens[i+1].equals("'<'")){
-                        this.compOp = CompOp.Less;
-                    }else if(tokens[i+1].equals("'>'")){
-                        this.compOp = CompOp.Greater;
-                    }else if(tokens[i+1].equals("'='")){
-                        this.compOp = CompOp.Equals;
-                    }else if(tokens[i+1].equals("'<='")){
-                        this.compOp = CompOp.LessEquals;
-                    }else if(tokens[i+1].equals("'>='")){
-                        this.compOp = CompOp.GreaterEquals;
-                    }else if(tokens[i+1].equals("'!='")){
-                        this.compOp = CompOp.NotEquals;
+                    switch (tokens[i + 1]) {
+                        case "'<'":
+                            this.compOp = CompOp.Less;
+                            break;
+                        case "'>'":
+                            this.compOp = CompOp.Greater;
+                            break;
+                        case "'='":
+                            this.compOp = CompOp.Equals;
+                            break;
+                        case "'<='":
+                            this.compOp = CompOp.LessEquals;
+                            break;
+                        case "'>='":
+                            this.compOp = CompOp.GreaterEquals;
+                            break;
+                        case "'!='":
+                            this.compOp = CompOp.NotEquals;
+                            break;
                     }
                     if (tokens[i].startsWith("'")){
                         lExpr=new Expr(new Val(tokens[i].replaceAll("'", "")));
@@ -83,7 +90,6 @@ public class Cond implements QueryComponent{
                         rExpr=new Expr(new Var(tokens[i+2]));
                     }
                     i+=2;
-                    continue;
             }
         }
     }
@@ -110,7 +116,7 @@ public class Cond implements QueryComponent{
         return rCond;
     }
 
-    public CondOp getCondOp() {
+    CondOp getCondOp() {
         return condOp;
     }
 
@@ -122,7 +128,7 @@ public class Cond implements QueryComponent{
         return rExpr;
     }
 
-    public CompOp getCompOp() {
+    CompOp getCompOp() {
         return compOp;
     }
 

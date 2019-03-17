@@ -6,7 +6,7 @@ public class Var implements QueryComponent{
 
     public Var(String name){
         if(name.indexOf(";")!=-1)
-            throw new RuntimeException("Illegal vaiable name");
+            throw new QueryException("Illegal vaiable name");
         this.name=name;
     }
 

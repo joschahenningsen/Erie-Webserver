@@ -1,7 +1,6 @@
 package Server.Database;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class EvaluationVisitor extends Visitor {
 
@@ -71,6 +70,15 @@ public class EvaluationVisitor extends Visitor {
                     case Less:
                         currentEvaluationRes = Double.parseDouble(l) < Double.parseDouble(r);
                         break;
+                    case GreaterEquals:
+                        currentEvaluationRes = Double.parseDouble(l) >= Double.parseDouble(r);
+                        break;
+                    case LessEquals:
+                        currentEvaluationRes = Double.parseDouble(l) <= Double.parseDouble(r);
+                        break;
+                    case NotEquals:
+                        currentEvaluationRes = !l.equals(r);
+                        break;
                     default:
                         currentEvaluationRes = false;
                         break;
@@ -109,7 +117,7 @@ public class EvaluationVisitor extends Visitor {
                     selectedFields[i]=j;
                     break;
                 }else if (j==databaseFields.length-1){
-                    throw new QueryException("Variable " + vars[i].getName()+" doesn't exist in Database");
+                    throw new QueryException("Column " + vars[i].getName()+" doesn't exist in Database");
                 }
             }
         }

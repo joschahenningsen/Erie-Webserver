@@ -2,6 +2,7 @@ package Server.Database;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -82,9 +83,36 @@ public class Database implements Iterator<String[]>{
     }
 
 
-    public ArrayList<String[]> get(String query){
+    public ArrayList<String[]> query(String query){
         String[] queryKeywords = query.split(" ");
+        if (queryKeywords[0].toUpperCase().equals("SELECT")){
+            int splitPos=0;
+            for (int i = 1; i < queryKeywords.length; i++) {
+                if (queryKeywords[i].toUpperCase().equals("WHERE")){
+                    splitPos = i;
+                    break;
+                }
+            }
+            String vars="";
+            for (int i = 1; i < splitPos; i++) {
+                vars+=queryKeywords[i].replaceAll(" ", "");
+            }
+            String[] varNames = vars.split(",");
+            Var[] varsArr = new Var[varNames.length];
+            for (int i = 0; i < varsArr.length; i++) {
+                varsArr[i] = new Var(varNames[i]);
+            }
 
+            String conditions = "";
+            for (int i = splitPos+1; i < queryKeywords.length; i++) {
+                conditions += queryKeywords[i]+" ";
+            }
+
+            Cond cond = new Cond(conditions, 0, 0);
+            SelectQuery q = new SelectQuery(varsArr, cond);
+            EvaluationVisitor evaluationVisitor = new EvaluationVisitor(this, q);
+            return evaluationVisitor.evaluate();
+        }
         return null;
     }
 

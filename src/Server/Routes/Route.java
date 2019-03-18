@@ -1,8 +1,10 @@
 package Server.Routes;
 
 import Server.*;
+import Server.Database.Database;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -13,6 +15,7 @@ public abstract class Route {
     protected String name;
     protected HttpRequest requestData;
     protected HashMap<String, String> vars;
+    protected ArrayList<Database> databases;
     private HttpStatus status;
     private String templateFile;
     private String body;
@@ -79,6 +82,14 @@ public abstract class Route {
         this.requestData=requestData;
         Config config=new Config();
         this.vars=config.defaultReplacements;
+    }
+
+    /**
+     * Sets databases specified in WebserverThread
+     * @param databases databases
+     */
+    public void setDatabases(ArrayList<Database> databases){
+        this.databases = databases;
     }
 
     /**

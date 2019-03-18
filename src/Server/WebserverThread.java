@@ -1,5 +1,6 @@
 package Server;
 
+import Server.Database.Database;
 import Server.Exceptions.InvalidRequestException;
 import Server.Routes.*;
 
@@ -16,6 +17,7 @@ public class WebserverThread extends Thread {
   private TemplateProcessor tp;
   private Socket client;
   private ArrayList<Route> routes;
+  private ArrayList<Database> databases;
 
   /**
    * Called by the Main method each time a user connects.
@@ -30,6 +32,7 @@ public class WebserverThread extends Thread {
     //important:
     routes.add(new MainPage());
     routes.add(new GetStartedPage());
+    databases.add(new Database("exampleDatabase", "id;name", 10));
   }
 
   /**
@@ -84,6 +87,7 @@ public class WebserverThread extends Thread {
       return;
     }else {
       response.setRequestData(request);
+      response.setDatabases(databases);
     }
     out.print(response.getResponse());
   }

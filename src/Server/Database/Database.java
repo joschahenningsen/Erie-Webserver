@@ -66,15 +66,22 @@ public class Database implements Iterator<String[]>{
         }
     }
 
+    private void insertArray(String[] date, int index){
+        String dateTemp="";
+        for (int i = 0; i < date.length; i++) {
+            dateTemp += date[i];
+            if (i<date.length-1)
+                dateTemp += ";";
+        }
+        if (index == -1)
+            data.add(dateTemp);
+        if (index != -1)
+            data.set(index, dateTemp);
+    }
+
     public void put(String[] date){
         synchronized (data){
-            String dateTemp="";
-            for (int i = 0; i < date.length; i++) {
-                dateTemp += date[i];
-                if (i<date.length-1)
-                    dateTemp += ";";
-            }
-            data.add(dateTemp);
+            insertArray(date, -1);
             if ((System.currentTimeMillis())-(lastUpdate+cacheTime)>=0)
                 saveDatabase();
         }
@@ -101,26 +108,8 @@ public class Database implements Iterator<String[]>{
                     limitpos = i + 1;
                 }
             }
-            String vars="";
-            for (int i = 1; i < splitPos; i++) {
-                vars+=queryKeywords[i].replaceAll(" ", "");
-            }
-            String[] varNames = vars.split(",");
-            Var[] varsArr = new Var[varNames.length];
-            for (int i = 0; i < varsArr.length; i++) {
-                varsArr[i] = new Var(varNames[i]);
-            }
-
-            String conditions = "";
-            int condEnd;
-            condEnd = queryKeywords.length;
-            if (limitpos != -1)
-                condEnd=limitpos-1;
-            for (int i = splitPos+1; i < condEnd; i++) {
-                conditions += queryKeywords[i]+" ";
-            }
-
-            Cond cond = new Cond(conditions, 0, 0);
+            Var[] varsArr = fetchVars(queryKeywords, splitPos);
+            Cond cond = fetchCond(queryKeywords, limitpos, splitPos);
 
             Limit limit = null;
             if (limitpos!=-1){
@@ -134,8 +123,70 @@ public class Database implements Iterator<String[]>{
             long e=System.currentTimeMillis();
             System.out.println(e-s+" ms.");
             return evaluationVisitor.evaluate();
+        }else if(queryKeywords[0].toUpperCase().equals("UPDATE")){
+            int splitPos = -1;
+            int valuepos = -1;
+            for (int i = 1; i < queryKeywords.length; i++) {
+                if (queryKeywords[i].toUpperCase().equals("WHERE")){
+                    splitPos = i;
+                }else if (queryKeywords[i].toUpperCase().equals("VALUES")){
+                    valuepos = i + 1;
+                }
+            }
+            Var[] vars = fetchVars(queryKeywords, splitPos);
+            Cond cond = fetchCond(queryKeywords, valuepos, splitPos);
+            Val[] vals = fetchVals(queryKeywords, valuepos);
+
+            if (vars.length!=vals.length)
+                throw new QueryException("Variable count doesn't match Value count in Update-query");
+
+            UpdateQuery q = new UpdateQuery(vars, cond, vals);
+
+            EvaluationVisitor evaluationVisitor = new EvaluationVisitor(this, q);
+            evaluationVisitor.evaluate();
+            saveDatabase();
+            return new ArrayList<>();
         }
-        return null;
+        throw new QueryException("Illegal query method");
+    }
+
+    private Val[] fetchVals(String[] queryKeywords, int splitPos) {
+        String vals="";
+        for (int i = splitPos; i < queryKeywords.length; i++) {
+            vals+=queryKeywords[i].replaceAll(" ", "").replaceAll("'", "");
+        }
+        String[] varNames = vals.split(",");
+        Val[] valsArr = new Val[varNames.length];
+        for (int i = 0; i < valsArr.length; i++) {
+            valsArr[i] = new Val(varNames[i]);
+        }
+        return valsArr;
+    }
+
+    private Cond fetchCond(String[] queryKeywords, int limitpos, int splitPos) {
+        String conditions = "";
+        int condEnd;
+        condEnd = queryKeywords.length;
+        if (limitpos != -1)
+            condEnd=limitpos-1;
+        for (int i = splitPos+1; i < condEnd; i++) {
+            conditions += queryKeywords[i]+" ";
+        }
+
+        return new Cond(conditions, 0, 0);
+    }
+
+    private Var[] fetchVars(String[] queryKeywords,int splitPos) {
+        String vars="";
+        for (int i = 1; i < splitPos; i++) {
+            vars+=queryKeywords[i].replaceAll(" ", "");
+        }
+        String[] varNames = vars.split(",");
+        Var[] varsArr = new Var[varNames.length];
+        for (int i = 0; i < varsArr.length; i++) {
+            varsArr[i] = new Var(varNames[i]);
+        }
+        return varsArr;
     }
 
     String[] getHeaders() {
@@ -150,5 +201,13 @@ public class Database implements Iterator<String[]>{
     @Override
     public String[] next() {
         return data.get(index++).split(";");
+    }
+
+    void setIndex(int index) {
+        this.index = index;
+    }
+
+    public void setCurrent(String[] currentData) {
+        insertArray(currentData, index-1);
     }
 }

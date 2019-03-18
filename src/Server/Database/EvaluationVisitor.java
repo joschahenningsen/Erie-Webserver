@@ -1,7 +1,6 @@
 package Server.Database;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Visitor that handles query evaluations
@@ -119,8 +118,25 @@ public class EvaluationVisitor extends Visitor {
         this.limit = limit.getLimit();
     }
 
+    @Override
+    public void visit(UpdateQuery updateQuery) {
+        selectedFields = getIndices(updateQuery.getVars());
+        while (database.hasNext()){
+            this.currentData = database.next();
+            updateQuery.getCond().accept(this);
+            if (currentEvaluationRes){
+                for (int i = 0; i < selectedFields.length; i++) {
+                    updateQuery.getVals()[i].accept(this);
+                    currentData[selectedFields[i]]=currentEvaluation;
+                }
+                database.setCurrent(currentData);
+            }
+        }
+    }
+
     ArrayList<String[]> evaluate(){
         query.accept(this);
+        database.setIndex(0);
         return results;
     }
 

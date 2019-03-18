@@ -88,13 +88,17 @@ public class Database implements Iterator<String[]>{
      * @return ArrayList with results
      */
     public ArrayList<String[]> query(String query){
+        long s=System.currentTimeMillis();
+
         String[] queryKeywords = query.split(" ");
         if (queryKeywords[0].toUpperCase().equals("SELECT")){
-            int splitPos=0;
+            int splitPos = 0;
+            int limitpos = -1;
             for (int i = 1; i < queryKeywords.length; i++) {
                 if (queryKeywords[i].toUpperCase().equals("WHERE")){
                     splitPos = i;
-                    break;
+                }else if (queryKeywords[i].toUpperCase().equals("LIMIT")){
+                    limitpos = i + 1;
                 }
             }
             String vars="";
@@ -108,19 +112,33 @@ public class Database implements Iterator<String[]>{
             }
 
             String conditions = "";
-            for (int i = splitPos+1; i < queryKeywords.length; i++) {
+            int condEnd;
+            condEnd = queryKeywords.length;
+            if (limitpos != -1)
+                condEnd=limitpos-1;
+            for (int i = splitPos+1; i < condEnd; i++) {
                 conditions += queryKeywords[i]+" ";
             }
 
             Cond cond = new Cond(conditions, 0, 0);
-            SelectQuery q = new SelectQuery(varsArr, cond);
+
+            Limit limit = null;
+            if (limitpos!=-1){
+                limit=new Limit(Integer.parseInt(queryKeywords[limitpos]));
+            }
+
+            SelectQuery q = new SelectQuery(varsArr, cond, limit);
+
             EvaluationVisitor evaluationVisitor = new EvaluationVisitor(this, q);
+
+            long e=System.currentTimeMillis();
+            System.out.println(e-s+" ms.");
             return evaluationVisitor.evaluate();
         }
         return null;
     }
 
-    public String[] getHeaders() {
+    String[] getHeaders() {
         return headers;
     }
 

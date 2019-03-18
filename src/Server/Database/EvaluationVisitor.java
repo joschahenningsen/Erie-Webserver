@@ -1,6 +1,7 @@
 package Server.Database;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Visitor that handles query evaluations
@@ -15,6 +16,7 @@ public class EvaluationVisitor extends Visitor {
     private String[] currentData;
     private String currentEvaluation;
     private boolean currentEvaluationRes;
+    private int limit;
 
     EvaluationVisitor(Database database, Query query){
         this.database = database;
@@ -35,8 +37,13 @@ public class EvaluationVisitor extends Visitor {
     @Override
     public void visit(SelectQuery selectQuery) {
         selectedFields = getIndices(selectQuery.getVars());
-        database.forEachRemaining(o -> {
-            this.currentData=o;
+        if (selectQuery.getLimit()!=null){
+            selectQuery.getLimit().accept(this);
+        }else{
+            this.limit = -1;
+        }
+        while (database.hasNext()&&(results.size()<limit||limit==-1)){
+            this.currentData = database.next();
             selectQuery.getCond().accept(this);
             if (currentEvaluationRes){
                 String[] res=new String[selectedFields.length];
@@ -45,7 +52,7 @@ public class EvaluationVisitor extends Visitor {
                 }
                 results.add(res);
             }
-        });
+        }
     }
 
     @Override
@@ -105,6 +112,11 @@ public class EvaluationVisitor extends Visitor {
                     break;
             }
         }
+    }
+
+    @Override
+    public void visit(Limit limit) {
+        this.limit = limit.getLimit();
     }
 
     ArrayList<String[]> evaluate(){

@@ -14,4 +14,6 @@ public abstract class Visitor {
     public abstract void visit(Expr expr);
 
     public abstract void visit(Cond cond);
+
+    public abstract void visit(Limit limit);
 }

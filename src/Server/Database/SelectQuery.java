@@ -7,10 +7,12 @@ package Server.Database;
 public class SelectQuery extends Query {
     private Var[] vars;
     private Cond cond;
+    private Limit limit;
 
-    SelectQuery(Var[] vars, Cond cond){
+    SelectQuery(Var[] vars, Cond cond, Limit limit){
         this.vars = vars;
         this.cond = cond;
+        this.limit = limit;
     }
 
     Var[] getVars() {
@@ -19,6 +21,10 @@ public class SelectQuery extends Query {
 
     Cond getCond() {
         return cond;
+    }
+
+    Limit getLimit() {
+        return limit;
     }
 
     @Override

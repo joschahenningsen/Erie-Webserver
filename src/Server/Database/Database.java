@@ -146,6 +146,13 @@ public class Database implements Iterator<String[]>{
             evaluationVisitor.evaluate();
             saveDatabase();
             return new ArrayList<>();
+        }else if (queryKeywords[0].toUpperCase().equals("INSERT")){
+            Val[] vals = fetchVals(queryKeywords, 1);
+            InsertQuery q = new InsertQuery(vals);
+
+            EvaluationVisitor evaluationVisitor = new EvaluationVisitor(this, q);
+            evaluationVisitor.evaluate();
+            return new ArrayList<>();
         }
         throw new QueryException("Illegal query method");
     }

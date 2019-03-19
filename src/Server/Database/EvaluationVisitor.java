@@ -134,6 +134,18 @@ public class EvaluationVisitor extends Visitor {
         }
     }
 
+    @Override
+    public void visit(InsertQuery insertQuery) {
+        Val[] vals = insertQuery.getVals();
+        if (vals.length!=database.getHeaders().length)
+            throw new QueryException("Invalid number of values for Insert");
+        String[] fields = new String[vals.length];
+        for (int i = 0; i < fields.length; i++) {
+            fields[i] = vals[i].getContent();
+        }
+        database.put(fields);
+    }
+
     ArrayList<String[]> evaluate(){
         query.accept(this);
         database.setIndex(0);

@@ -28,7 +28,7 @@ public class WebserverThread extends Thread {
     this.client = client;
 
     routes=new ArrayList<>();
-
+    databases = new ArrayList<>();
     //important:
     routes.add(new MainPage());
     routes.add(new GetStartedPage());

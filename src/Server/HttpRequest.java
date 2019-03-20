@@ -10,7 +10,8 @@ import java.util.HashMap;
  */
 public class HttpRequest {
   private HttpMethod method;
-
+  private int length;
+  private HashMap<String, String> POST;
   /**
    * gets the Method for the request
    * @return HttpMethod.Post/Get
@@ -25,7 +26,7 @@ public class HttpRequest {
    * returns the path the user tries to access
    * @return path
    */
-  public String getPath() {
+  String getPath() {
     return path;
   }
 
@@ -55,7 +56,7 @@ public class HttpRequest {
    * @param requestLine
    * @param others
    */
-  public HttpRequest(String requestLine, String others) {
+  HttpRequest(String requestLine, String others) {
     String[] requestLineParts = requestLine.split(" ");
     if(requestLineParts.length < 2)
       throw new InvalidRequestException();
@@ -66,6 +67,7 @@ public class HttpRequest {
         break;
       case "POST":
         this.method = HttpMethod.POST;
+        POST = new HashMap<>();
         break;
       default:
         throw new InvalidRequestException();
@@ -73,18 +75,20 @@ public class HttpRequest {
 
 
     System.out.println(others);
-    String additionalParams[] = others.split("\n");
+    String[] additionalParams = others.split("\n");
     cookies=new HashMap<>();
-    for (int i = 0; i < additionalParams.length; i++) {//resolve cookies
-      if (additionalParams[i].startsWith("Cookie: ")){
-        if (additionalParams[i].contains(";")){
-          String[]cookies=additionalParams[i].split(": ")[1].split("; ");
+    for (String additionalParam : additionalParams) {//resolve cookies
+      if (additionalParam.startsWith("Cookie: ")) {
+        if (additionalParam.contains(";")) {
+          String[] cookies = additionalParam.split(": ")[1].split("; ");
           for (String cookie : cookies) {
-            this.cookies.put(cookie.split("=")[0],cookie.split("=")[1]);
+            this.cookies.put(cookie.split("=")[0], cookie.split("=")[1]);
           }
-        }else{
-          this.cookies.put(additionalParams[i].split(": ")[1].split("=")[0], additionalParams[i].split(": ")[1].split("=")[1]);
+        } else {
+          this.cookies.put(additionalParam.split(": ")[1].split("=")[0], additionalParam.split(": ")[1].split("=")[1]);
         }
+      } else if (additionalParam.startsWith("Content-Length: ")) {
+        this.length = Integer.parseInt(additionalParam.split(": ")[1]);
       }
     }
     
@@ -97,10 +101,28 @@ public class HttpRequest {
       throw new InvalidRequestException();
     String paramsStr = pathParams[1];
     String[] params = paramsStr.split("&");
-    for (int i = 0; i < params.length; i++) {
-      String[] paramValue = params[i].split("=");
-      if(paramValue.length != 2)
+    for (String param : params) {
+      String[] paramValue = param.split("=");
+      if (paramValue.length != 2)
         throw new InvalidRequestException();
     }
+  }
+
+    int getLength() {
+        return length;
+    }
+
+  void setBody(String body) {
+    String[] params = body.split("&");
+    for (String param : params) {
+      String[] paramValue = param.split("=");
+      if (paramValue.length != 2)
+        throw new InvalidRequestException();
+      POST.put(paramValue[0], paramValue[1]);
+    }
+  }
+
+  public String POST(String key){
+    return POST.get(key);
   }
 }

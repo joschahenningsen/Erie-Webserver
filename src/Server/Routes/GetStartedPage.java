@@ -1,5 +1,7 @@
 package Server.Routes;
 
+import Server.HttpMethod;
+
 public class GetStartedPage extends Route {
 
     public GetStartedPage(){
@@ -24,7 +26,7 @@ public class GetStartedPage extends Route {
         content.append("<h2>Creating Routes</h2>");
         content.append("Creating routes to your pages is as easy as it sonds: You'll have to create a new Class extending the Route class which implements a default Constructor that sets the attribute name to your pages url via setUrl(url). Additionally you are going to need to implement the function setupPage in which you can create your page by using a template file (setTemplateFile(filename)) and replace contents with the vars Map using vars.put(key, replacement), or use the setBody method offered by the Route. Finally you have to add the new class to the WebserverThreads constructor. Have fun and explore the Code!");
         content.append("</br></br></br><h2>Accessing Request Data</h2>");
-        content.append("Accessing Request-data is not hard as well. Every Route implementing the Routes class has the attribute requestData which offers quite a few helpful methods like hasCookie(String key) and getCookie(key). More is coming soon!");
+        content.append("Accessing Request-data is not hard as well. Every Route implementing the Routes class has the attribute requestData which offers quite a few helpful methods like hasCookie(String key) and getCookie(key). Post variables can be Accessed by calling requestData.POST(String key). More is coming soon!");
         content.append("<br>To set user side data, such as cookies you can use one of the methods implemented in HttpResponse. For example setCookie(String key, String value).");
         content.append("</br></br></br><h2>Limit File Access</h2>");
         content.append("Disallowing access to files works by placing a file named \".forbidden\" into a restricted directory.");

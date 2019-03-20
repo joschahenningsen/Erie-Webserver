@@ -38,10 +38,10 @@ public class WebserverThread extends Thread {
   /**
    * composes the http response and sends it back to the user.
    * This method basically is the heart of the server.- Make sure to be careful editing it
-   * @param in
-   * @param out
-   * @param outputStream
-   * @throws IOException
+   * @param in reads request
+   * @param out writes response
+   * @param outputStream writes response in case of file request
+   * @throws IOException if FileRequest fails
    */
   private void communicate(BufferedReader in, PrintWriter out, OutputStream outputStream) throws IOException {
     String requestLine = in.readLine();
@@ -68,7 +68,11 @@ public class WebserverThread extends Thread {
       out.print(new HttpResponse(HttpStatus.MethodNotAllowed));
       return;
     }else if (request.getMethod()==HttpMethod.POST){
-      //todo: handle post request 
+      String body = "";
+      for (int i = 0; i < request.getLength(); i++) {
+        body += (char)in.read();
+      }
+      request.setBody(body);
     }
 
     Route response=null;
@@ -99,13 +103,11 @@ public class WebserverThread extends Thread {
   public void run() {
     try {
       BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-      PrintWriter out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
-      try {
+      try (PrintWriter out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()))) {
         communicate(in, out, client.getOutputStream());
       } catch (IOException exp) {
         exp.printStackTrace();
       } finally {
-        out.close();
         client.close();
       }
     } catch (IOException e) {

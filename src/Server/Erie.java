@@ -20,6 +20,7 @@ public class Erie {
   public static void main(String[] args) throws IOException {
 
     Config config=new Config();
+    Logger logger = new Logger();
     @SuppressWarnings("resource")
     ServerSocket serverSocket = new ServerSocket(config.port);
     IntStream.iterate(0, i -> i + 1).forEach(i -> {
@@ -27,7 +28,7 @@ public class Erie {
       try {
         client = serverSocket.accept();
         System.out.println("*** Client connected!");
-        WebserverThread wst = new WebserverThread(client);
+        WebserverThread wst = new WebserverThread(client, logger);
         wst.start();
       } catch (IOException e) {
         e.printStackTrace();

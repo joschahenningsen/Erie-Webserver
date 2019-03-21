@@ -2,11 +2,15 @@ package Server;
 
 import Server.Database.Database;
 import Server.Exceptions.InvalidRequestException;
-import Server.Routes.*;
+import Server.Routes.GetStartedPage;
+import Server.Routes.MainPage;
+import Server.Routes.Route;
 
 import java.io.*;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -14,25 +18,28 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Joscha Henningsen
  */
 public class WebserverThread extends Thread {
+  private final SimpleDateFormat dateformat;
   private TemplateProcessor tp;
   private Socket client;
   private ArrayList<Route> routes;
   private ArrayList<Database> databases;
+  private Logger logger;
 
   /**
    * Called by the Main method each time a user connects.
    * Make sure to include every Route in this method you want to be publicly available
    * @param client
    */
-  public WebserverThread(Socket client) {
+  public WebserverThread(Socket client, Logger logger) {
     this.client = client;
-
     routes=new ArrayList<>();
     databases = new ArrayList<>();
     //important:
     routes.add(new MainPage());
     routes.add(new GetStartedPage());
     databases.add(new Database("exampleDatabase", "id;name", 10));
+    this.logger = logger;
+    dateformat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
   }
 
   /**
@@ -45,6 +52,10 @@ public class WebserverThread extends Thread {
    */
   private void communicate(BufferedReader in, PrintWriter out, OutputStream outputStream) throws IOException {
     String requestLine = in.readLine();
+    logger.addLine(dateformat.format(new Date())+"\t"+requestLine);
+    Thread logthread = new Thread(logger);
+    logthread.start();
+
     String getParams = "";
     if (requestLine == null)
       return;

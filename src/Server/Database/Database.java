@@ -170,12 +170,12 @@ public class Database implements Iterator<String[]>{
         return valsArr;
     }
 
-    private Cond fetchCond(String[] queryKeywords, int limitpos, int splitPos) {
+    private Cond fetchCond(String[] queryKeywords, int limitPos, int splitPos) {
         String conditions = "";
         int condEnd;
         condEnd = queryKeywords.length;
-        if (limitpos != -1)
-            condEnd=limitpos-1;
+        if (limitPos != -1)
+            condEnd=limitPos-1;
         for (int i = splitPos+1; i < condEnd; i++) {
             conditions += queryKeywords[i]+" ";
         }

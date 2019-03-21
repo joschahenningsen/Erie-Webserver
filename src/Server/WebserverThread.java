@@ -45,13 +45,16 @@ public class WebserverThread extends Thread {
    */
   private void communicate(BufferedReader in, PrintWriter out, OutputStream outputStream) throws IOException {
     String requestLine = in.readLine();
-
+    String getParams = "";
     if (requestLine == null)
       return;
-    if (requestLine.contains("?"))
-      requestLine=requestLine.split("\\?")[0];
-    System.out.println(requestLine);
-    AtomicReference<String> otherLines= new AtomicReference<>("");
+    if (requestLine.contains("?")){
+      getParams = requestLine.split("\\?")[1];
+      getParams = getParams.substring(0, getParams.length()-9);
+      requestLine = requestLine.split("\\?")[0];
+    }
+    //System.out.println(requestLine);
+    AtomicReference<String> otherLines = new AtomicReference<>("");
     in.lines().takeWhile(l->!l.equals("")).forEach(l->otherLines.getAndSet(otherLines.get()+"\n"+l));
     System.out.println("=> Request header received");
     HttpRequest request;
@@ -74,6 +77,7 @@ public class WebserverThread extends Thread {
       }
       request.setBody(body);
     }
+    request.setGetParams(getParams);
 
     Route response=null;
     //finds the correct route for the request

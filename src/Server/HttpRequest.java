@@ -1,7 +1,6 @@
 package Server;
 
 import Server.Exceptions.InvalidRequestException;
-
 import java.util.HashMap;
 
 /**
@@ -12,11 +11,13 @@ public class HttpRequest {
   private HttpMethod method;
   private int length;
   private HashMap<String, String> POST;
+  private HashMap<String, String> GET;
+
   /**
    * gets the Method for the request
    * @return HttpMethod.Post/Get
    */
-  public HttpMethod getMethod() {
+  HttpMethod getMethod() {
     return method;
   }
   
@@ -61,6 +62,7 @@ public class HttpRequest {
     if(requestLineParts.length < 2)
       throw new InvalidRequestException();
     String method = requestLineParts[0];
+    GET = new HashMap<>();
     switch(method) {
       case "GET":
         this.method = HttpMethod.GET;
@@ -74,7 +76,6 @@ public class HttpRequest {
     }
 
 
-    System.out.println(others);
     String[] additionalParams = others.split("\n");
     cookies=new HashMap<>();
     for (String additionalParam : additionalParams) {//resolve cookies
@@ -122,7 +123,36 @@ public class HttpRequest {
     }
   }
 
+  /**
+   * Returns a variable passed in post request
+   * @param key name of post param
+   * @return value of post param
+   */
   public String POST(String key){
+    if (POST == null)
+      return null;
     return POST.get(key);
   }
+
+  void setGetParams(String getParams) {
+    String[] params = getParams.split("&");
+    for (String param : params) {
+      String[] paramValue = param.split("=");
+      if (paramValue.length == 2)
+        GET.put(paramValue[0], paramValue[1]);
+        //throw new InvalidRequestException();
+    }
+  }
+
+  /**
+   * Returns a variable passed in get request
+   * @param key name of get param
+   * @return value of get param
+   */
+  public String GET(String key){
+    if (GET == null)
+      return null;
+    return GET.get(key);
+  }
+
 }

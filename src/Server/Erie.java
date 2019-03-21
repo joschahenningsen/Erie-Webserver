@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
  * Starts a new Thread for each request.
  * @author Joscha Henningsen
  */
-public class Webserver {
+public class Erie {
 
   /**
    * Main method to start Server with

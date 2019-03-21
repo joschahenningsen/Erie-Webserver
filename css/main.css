@@ -98,3 +98,8 @@ body {
 .mastfoot {
     color: rgba(255, 255, 255, .5);
 }
+
+.topLogo{
+    height: 40px;
+    width: auto;
+}

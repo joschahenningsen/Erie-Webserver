@@ -16,7 +16,7 @@ public class Config {
      */
     public Config(){
         //port your server runs on
-        port=80;
+        port=8080;
 
         //default value pairs that get replaced by the TemplateProcessor on each site you use it on
         defaultReplacements.put("%defaultheader", "<link rel=\"stylesheet\" " +

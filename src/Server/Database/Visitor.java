@@ -2,6 +2,7 @@ package Server.Database;
 
 /**
  * Class visitors extend
+ *
  * @author Joscha Henningsen
  */
 public abstract class Visitor {

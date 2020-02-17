@@ -6,17 +6,17 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class Logger implements Runnable{
-    private File logfile;
+public class Logger implements Runnable {
+    private final File logfile;
     private ArrayList<String> lines;
 
-    public Logger(){
+    public Logger() {
         Config c = new Config();
         logfile = new File(c.logfile);
         lines = new ArrayList<>();
     }
 
-    public void addLine(String line){
+    public void addLine(String line) {
         this.lines.add(line);
     }
 
@@ -24,8 +24,8 @@ public class Logger implements Runnable{
     public void run() {
         try {
             PrintWriter printWriter = new PrintWriter(new FileOutputStream(logfile, true));
-            synchronized (logfile){
-                lines.forEach(l->printWriter.println(l));
+            synchronized (logfile) {
+                lines.forEach(printWriter::println);
                 printWriter.flush();
                 lines = new ArrayList<>();
             }

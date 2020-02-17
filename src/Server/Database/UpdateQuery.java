@@ -2,6 +2,7 @@ package Server.Database;
 
 /**
  * A Update Query
+ *
  * @author Joscha Henningsen
  */
 public class UpdateQuery extends Query {

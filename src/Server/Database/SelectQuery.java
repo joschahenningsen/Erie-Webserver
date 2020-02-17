@@ -2,6 +2,7 @@ package Server.Database;
 
 /**
  * A Select query
+ *
  * @author Joscha Henningsen
  */
 public class SelectQuery extends Query {
@@ -9,7 +10,7 @@ public class SelectQuery extends Query {
     private Cond cond;
     private Limit limit;
 
-    SelectQuery(Var[] vars, Cond cond, Limit limit){
+    SelectQuery(Var[] vars, Cond cond, Limit limit) {
         this.vars = vars;
         this.cond = cond;
         this.limit = limit;

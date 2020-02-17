@@ -2,6 +2,7 @@ package Server.Database;
 
 /**
  * Exception throws if query is malformed
+ *
  * @author Joscha Henningsen
  */
 public class QueryException extends RuntimeException {

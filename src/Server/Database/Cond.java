@@ -4,9 +4,10 @@ import java.io.ByteArrayInputStream;
 
 /**
  * Condition for db queries
+ *
  * @author Joscha Henningsen
  */
-public class Cond implements QueryComponent{
+public class Cond implements QueryComponent {
     Cond lCond;
     Cond rCond;
     private CondOp condOp;
@@ -19,15 +20,15 @@ public class Cond implements QueryComponent{
 
     private boolean isLeaf;
 
-    Cond(String conditions, int start, int end){
+    Cond(String conditions, int start, int end) {
         Lexer l = new Lexer(new ByteArrayInputStream(conditions.getBytes()));
         int s;
-        String tokenStr="";
-        while ( (s = l.nextSymbol()) != Lexer.EOF)
-            if(s != Lexer.EOL){
-                if (l.toString().equals("'='") && (tokenStr.endsWith("'<'")||tokenStr.endsWith("'>'")||tokenStr.endsWith("'!'"))) {
-                    tokenStr = tokenStr.substring(0, tokenStr.length()-1) + l.toString().substring(1);
-                }else{
+        String tokenStr = "";
+        while ((s = l.nextSymbol()) != Lexer.EOF)
+            if (s != Lexer.EOL) {
+                if (l.toString().equals("'='") && (tokenStr.endsWith("'<'") || tokenStr.endsWith("'>'") || tokenStr.endsWith("'!'"))) {
+                    tokenStr = tokenStr.substring(0, tokenStr.length() - 1) + l.toString().substring(1);
+                } else {
                     tokenStr += ";" + l.toString();
                 }
             }
@@ -36,14 +37,14 @@ public class Cond implements QueryComponent{
             end = tokens.length;
 
         for (int i = start; i < end; i++) {
-            switch (this.tokens[i]){
+            switch (this.tokens[i]) {
                 case "'('":
                     int len = pLen(i);
-                    if (len-i!=3){
-                        if (lCond==null){
-                            lCond=new Cond(conditions, i+1, len-1);
-                        }else {
-                            rCond=new Cond(conditions, i+1, len-1);
+                    if (len - i != 3) {
+                        if (lCond == null) {
+                            lCond = new Cond(conditions, i + 1, len - 1);
+                        } else {
+                            rCond = new Cond(conditions, i + 1, len - 1);
                         }
                     }
 
@@ -79,33 +80,33 @@ public class Cond implements QueryComponent{
                             this.compOp = CompOp.NotEquals;
                             break;
                     }
-                    if (tokens[i].startsWith("'")){
-                        lExpr=new Expr(new Val(tokens[i].replaceAll("'", "")));
-                    }else{
-                        lExpr=new Expr(new Var(tokens[i]));
+                    if (tokens[i].startsWith("'")) {
+                        lExpr = new Expr(new Val(tokens[i].replaceAll("'", "")));
+                    } else {
+                        lExpr = new Expr(new Var(tokens[i]));
                     }
-                    if (tokens[i+2].startsWith("'")){
-                        rExpr=new Expr(new Val(tokens[i+2].replaceAll("'", "")));
-                    }else{
-                        rExpr=new Expr(new Var(tokens[i+2]));
+                    if (tokens[i + 2].startsWith("'")) {
+                        rExpr = new Expr(new Val(tokens[i + 2].replaceAll("'", "")));
+                    } else {
+                        rExpr = new Expr(new Var(tokens[i + 2]));
                     }
-                    i+=2;
+                    i += 2;
             }
         }
     }
 
-    public Cond(Cond lCond, CondOp condOp, Cond rCond){
-        this.lCond=lCond;
-        this.rCond=rCond;
-        this.condOp=condOp;
-        isLeaf=false;
+    public Cond(Cond lCond, CondOp condOp, Cond rCond) {
+        this.lCond = lCond;
+        this.rCond = rCond;
+        this.condOp = condOp;
+        isLeaf = false;
     }
 
-    public Cond(Expr lExpr, CompOp compOp, Expr rExpr){
-        this.lExpr=lExpr;
-        this.rExpr=rExpr;
-        this.compOp=compOp;
-        isLeaf=true;
+    public Cond(Expr lExpr, CompOp compOp, Expr rExpr) {
+        this.lExpr = lExpr;
+        this.rExpr = rExpr;
+        this.compOp = compOp;
+        isLeaf = true;
     }
 
     public Cond getlCond() {
@@ -141,14 +142,14 @@ public class Cond implements QueryComponent{
         v.visit(this);
     }
 
-    private int pLen(int openingIndex){
-        int brackets=0;
+    private int pLen(int openingIndex) {
+        int brackets = 0;
         for (int i = openingIndex; i < tokens.length; i++) {
-            if (tokens[i].equals("'('")){
+            if (tokens[i].equals("'('")) {
                 brackets++;
-            }else if (tokens[i].equals("')'")){
+            } else if (tokens[i].equals("')'")) {
                 brackets--;
-                if (brackets==0)
+                if (brackets == 0)
                     return i;
             }
         }

@@ -2,6 +2,7 @@ package Server.Database;
 
 /**
  * Component in DB Queries
+ *
  * @author Joscha Henningsen
  */
 public interface QueryComponent {

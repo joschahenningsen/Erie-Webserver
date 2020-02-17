@@ -3,11 +3,11 @@ package Server.Database;
 public class InsertQuery extends Query {
     private Val[] vals;
 
-    InsertQuery(Val[] vals){
+    InsertQuery(Val[] vals) {
         this.vals = vals;
     }
 
-    Val[] getVals(){
+    Val[] getVals() {
         return vals;
     }
 

@@ -5,6 +5,7 @@ import java.io.*;
 /**
  * Based on https://github.com/unnikkedga.
  * MIT licenced, big thanks!
+ *
  * @author Joscha Henningsen
  */
 public class Lexer {
@@ -94,9 +95,9 @@ public class Lexer {
     }
 
     public String toString() {
-        String ret=input.toString();
+        String ret = input.toString();
         ret = ret.split(",")[0].substring(6);
-        ret = ret.substring(0, ret.length()-1);
+        ret = ret.substring(0, ret.length() - 1);
         return ret;
     }
 }

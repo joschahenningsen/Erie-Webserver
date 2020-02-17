@@ -2,18 +2,19 @@ package Server.Database;
 
 /**
  * Expression in DB query
+ *
  * @author Joscha Henningsen
  */
-public class Expr implements QueryComponent{
+public class Expr implements QueryComponent {
     private Var var;
 
     private Val val;
 
-    Expr(Var var){
+    Expr(Var var) {
         this.var = var;
     }
 
-    Expr(Val val){
+    Expr(Val val) {
         this.val = val;
     }
 

@@ -1,12 +1,10 @@
 package Server.Routes;
 
-import Server.HttpMethod;
-
 public class GetStartedPage extends Route {
 
-    public GetStartedPage(){
+    public GetStartedPage() {
         setUrl("/get-started");
-        acceptSubpages(true);
+        acceptSubPages(true);
     }
 
     @Override
@@ -22,7 +20,7 @@ public class GetStartedPage extends Route {
         vars.put("%page2", "About");
         vars.put("%page0active", "inactive");
         vars.put("%page1active", "active");
-        StringBuilder content=new StringBuilder();
+        StringBuilder content = new StringBuilder();
         content.append("<h2>Creating Routes</h2>");
         content.append("Creating routes to your pages is as easy as it sonds: You'll have to create a new Class extending the Route class which implements a default Constructor that sets the attribute name to your pages url via setUrl(url). Additionally you are going to need to implement the function setupPage in which you can create your page by using a template file (setTemplateFile(filename)) and replace contents with the vars Map using vars.put(key, replacement), or use the setBody method offered by the Route. Finally you have to add the new class to the WebserverThreads constructor. Have fun and explore the Code!");
         content.append("</br></br></br><h2>Accessing Request Data</h2>");

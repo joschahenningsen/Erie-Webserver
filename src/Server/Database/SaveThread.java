@@ -6,17 +6,18 @@ import java.util.ArrayList;
 /**
  * Separate Thread that saves the database after changes, in order to prevent
  * long waiting times after changing db fields
+ *
  * @author Joscha Henningsen
  */
-public class SaveThread implements Runnable{
+public class SaveThread implements Runnable {
     private final String[] headers;
     private final ArrayList<String> data;
     private String fileName;
 
-    SaveThread(ArrayList<String> data, String fileName, String[] headers){
+    SaveThread(ArrayList<String> data, String fileName, String[] headers) {
         this.data = data;
         this.fileName = fileName;
-        this.headers=headers;
+        this.headers = headers;
     }
 
     @Override
@@ -24,9 +25,9 @@ public class SaveThread implements Runnable{
         System.out.println("Saving db");
         synchronized (data) {
             File f = new File(fileName);
-            FileOutputStream fileOutputStream=null;
+            FileOutputStream fileOutputStream = null;
             try {
-                fileOutputStream=new FileOutputStream(f, false);
+                fileOutputStream = new FileOutputStream(f, false);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

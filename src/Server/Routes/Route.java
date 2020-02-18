@@ -5,7 +5,7 @@ import Server.Database.Database;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * abstract class for your Routes to extend from.
@@ -15,7 +15,7 @@ import java.util.HashMap;
 public abstract class Route {
     protected String name;
     protected HttpRequest requestData;
-    protected HashMap<String, String> vars;
+    protected Map<String, String> vars;
     protected ArrayList<Database> databases;
     private HttpStatus status;
     private String templateFile;

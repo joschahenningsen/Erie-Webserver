@@ -13,7 +13,7 @@ import java.util.HashMap;
  * @author Joscha Henningsen
  */
 public class HttpResponse {
-    private String[] illegalCookieChars = new String[]{"(", ")", "<", ">", "@", ",", ";", ":", "\\", "\"", "/", "[", "]", "?", "=", "{", "}"};
+    private final String[] illegalCookieChars = new String[]{"(", ")", "<", ">", "@", ",", ";", ":", "\\", "\"", "/", "[", "]", "?", "=", "{", "}"};
     private HttpStatus status;
     private ArrayList<String> headers = new ArrayList<>();
 
@@ -39,6 +39,7 @@ public class HttpResponse {
     public HttpResponse(HttpStatus status, String body) {
         this.status = status;
         this.body = body;
+        headers.addAll(new Config().defaultHeaders);
     }
 
     /**

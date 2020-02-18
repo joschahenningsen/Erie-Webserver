@@ -1,6 +1,9 @@
 package Server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Configuration for the server
@@ -9,8 +12,9 @@ import java.util.HashMap;
  */
 public class Config {
     int port;
-    public HashMap<String, String> defaultReplacements = new HashMap<>();
+    public Map<String, String> defaultReplacements = new HashMap<>();
     String logfile;
+    public List<String> defaultHeaders = new ArrayList<>();
 
     /**
      * Set configs here, not in the classes definition.
@@ -27,6 +31,9 @@ public class Config {
                 "    <script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js\"></script>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
                 "    <link rel=\"stylesheet\" href=\"css/main.css\">");
+
+        //the headers you want to send with each http response:
+        defaultHeaders.add("Content-Language: en");
 
         //file for error and access logs
         logfile = "logs.txt";

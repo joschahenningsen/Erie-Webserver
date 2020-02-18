@@ -33,6 +33,7 @@ public class WebserverThread extends Thread {
      * @param client
      */
     public WebserverThread(Socket client, Logger logger) {
+        // TODO instantiating the routes here is inefficient
         this.client = client;
         routes = new ArrayList<>();
         databases = new ArrayList<>();

@@ -60,7 +60,7 @@ public class HttpResponse {
     public String toString() {
         StringBuilder responseBuilder = new StringBuilder();
 
-        responseBuilder.append("HTTP/2.0 ");
+        responseBuilder.append("HTTP/1.1 ");
         responseBuilder.append(status.getCode());
         responseBuilder.append(" ");
         responseBuilder.append(status.getText());

@@ -83,7 +83,7 @@ public class FileRequest {
             return;
         }
         try {
-            out.println("HTTP/2.0 " + HttpStatus.Ok.getCode() + " " + HttpStatus.Ok.getText());
+            out.println("HTTP/1.1 " + HttpStatus.Ok.getCode() + " " + HttpStatus.Ok.getText());
             out.println("Content-Type: " + Files.probeContentType(Paths.get(this.fileName)));
             out.println("Content-Length: " + fileInputStream.available());
             out.println("");

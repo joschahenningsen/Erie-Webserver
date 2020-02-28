@@ -1,6 +1,5 @@
 package Server;
 
-import Server.Database.Database;
 import Server.Exceptions.InvalidRequestException;
 import Server.Routes.GetStartedPage;
 import Server.Routes.MainPage;
@@ -23,7 +22,6 @@ public class WebserverThread extends Thread {
     private TemplateProcessor tp;
     private Socket client;
     private ArrayList<Route> routes;
-    private ArrayList<Database> databases;
     private Logger logger;
 
     /**
@@ -36,11 +34,9 @@ public class WebserverThread extends Thread {
         // TODO instantiating the routes here is inefficient
         this.client = client;
         routes = new ArrayList<>();
-        databases = new ArrayList<>();
         //important:
         routes.add(new MainPage());
         routes.add(new GetStartedPage());
-        databases.add(new Database("exampleDatabase", "id;name", 10));
         this.logger = logger;
         dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     }
@@ -110,7 +106,6 @@ public class WebserverThread extends Thread {
             return;
         } else {
             response.setRequestData(request);
-            response.setDatabases(databases);
         }
         out.print(response.getResponse());
     }
